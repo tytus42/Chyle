@@ -138,6 +138,7 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 #play .track{position:relative;z-index:1;flex:none;height:16px;margin:0 6px 16px;border:3px solid var(--ink);background:var(--paper)}
 #play .bar{height:100%;background:var(--ink)}
 #play.mixed #zOk{display:none}
+#play.tiltonly .zones{display:none}
 #play.mixed .zones button:first-child{justify-content:center;padding-left:0}
 #play.ok .card{background:var(--ok)}
 #play.pass .card{background:var(--pass)}
@@ -294,7 +295,16 @@ const CATS=[
 /* ---------- storage (safe) ---------- */
 const store={get(k,d){try{const v=localStorage.getItem("chc_"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("chc_"+k,JSON.stringify(v))}catch(e){}}};
 let custom=store.get("custom",[]);
-let prefs=Object.assign({time:60,mode:"quick",rounds:2,sound:true,vibe:true,invert:false,mixed:true,rtype:"time",wordTime:15,teams:["Drużyna 1","Drużyna 2"],players:["Gracz 1","Gracz 2","Gracz 3"]},store.get("prefs",{}));
+let prefs=Object.assign({time:60,mode:"quick",rounds:2,sound:true,vibe:true,invert:false,mixed:true,control:null,rtype:"time",wordTime:15,teams:["Drużyna 1","Drużyna 2"],players:["Gracz 1","Gracz 2","Gracz 3"]},store.get("prefs",{}));
+if(!prefs.control)prefs.control=prefs.mixed===false?"tilt":"mixed";
+const CTRL={
+  mixed:{ok:"Przechyl: <b>zgadnięte</b>",pass:"Dotknij ekranu: <i>pas</i>",hint:"Przechyl telefon w dowolną stronę przy zgadnięciu, dotknij ekranu przy pasie.",
+    ready:"Przechyl telefon wyraźnie w dowolną stronę, gdy zgadniesz, potem wróć do pionu. Dotknij ekranu, żeby spasować. Bez czujnika ruchu gra przełączy się na dotyk."},
+  tilt:{ok:"W dół: <b>zgadnięte</b>",pass:"W górę: <i>pas</i>",hint:"Przechyl w dół przy zgadnięciu, w górę przy pasie. Dotyk nie działa.",
+    ready:"Przechyl telefon wyraźnie w dół, gdy zgadniesz, w górę przy pasie, potem wróć do pionu. Bez czujnika ruchu gra przełączy się na dotyk."},
+  touch:{ok:"Prawa strona: <b>zgadnięte</b>",pass:"Lewa strona: <i>pas</i>",hint:"Czujnik ruchu nie działa w trakcie gry. Prawa strona ekranu to zgadnięte, lewa to pas.",
+    ready:"Dotknij prawej strony ekranu, gdy zgadniesz, lewej przy pasie. Przechylanie jest wyłączone."}
+};
 const savePrefs=()=>store.set("prefs",prefs);
 const saveCustom=()=>store.set("custom",custom);
 const allCats=()=>CATS.concat(custom.map(c=>Object.assign({g:"Twoje kategorie",custom:true},c)));
@@ -404,10 +414,11 @@ function openSettings(){
   const box=sheet(`<h3>Ustawienia</h3><div class="toggles">
     ${tg("sound","Dźwięki","Sygnał przy zgadnięciu, pasie i końcu czasu")}
     ${tg("vibe","Wibracje","Krótka wibracja przy każdej akcji")}
-    ${tg("mixed","Ruch = dobrze, dotyk = pas","Wyłącz, by przechylać w dół przy zgadnięciu i w górę przy pasie")}
-    ${tg("invert","Odwróć przechylanie","Tylko w klasycznym sterowaniu, gdy telefon myli górę z dołem")}
-  </div><div class="row"><button class="btn primary" id="setOk">Gotowe</button></div>`,"var(--violet)");
+    ${tg("invert","Odwróć przechylanie","Tylko przy sterowaniu „Przechylanie”, gdy telefon myli górę z dołem")}
+  </div><div class="field"><span class="lbl">Sterowanie</span>${seg("control",[["mixed","Ruch + dotyk"],["tilt","Przechylanie"],["touch","Tylko dotyk"]],prefs.control)}<p class="hint" id="ctrlHint"></p></div><div class="row"><button class="btn primary" id="setOk">Gotowe</button></div>`,"var(--violet)");
   box.querySelectorAll(".tg").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.k;prefs[k]=!prefs[k];b.setAttribute("aria-checked",prefs[k]);savePrefs();if(k==="sound"&&prefs.sound)sfx.ok();if(k==="vibe")buzz(60)}));
+  const ch=()=>{$("ctrlHint").textContent=CTRL[prefs.control].hint};
+  bindSeg(box,"control",v=>{prefs.control=v;savePrefs();ch()});ch();
   $("setOk").addEventListener("click",closeSheet);
 }
 $("openSettings").addEventListener("click",openSettings);
@@ -421,10 +432,9 @@ function newGame(cat){
 }
 const cur=()=>G.parts[G.turn%G.parts.length];
 function toReady(){
-  const mx=prefs.mixed;
-  $("lgOk").innerHTML=mx?"Przechyl: <b>zgadnięte</b>":"W dół: <b>zgadnięte</b>";
-  $("lgPass").innerHTML=mx?"Dotknij ekranu: <i>pas</i>":"W górę: <i>pas</i>";
-  $("readyHint").innerHTML=(mx?"Przechyl telefon w dowolną stronę, gdy zgadniesz, potem wróć do pionu. Dotknij ekranu, żeby spasować. Bez czujnika ruchu gra przełączy się na dotyk: prawa strona dobrze, lewa pas.":"Bez czujnika? Dotknij prawej strony ekranu przy zgadnięciu, lewej przy pasie.")+'<span class="rot"> Obróć telefon poziomo.</span>';
+  const C=CTRL[prefs.control];
+  $("lgOk").innerHTML=C.ok;$("lgPass").innerHTML=C.pass;
+  $("readyHint").innerHTML=C.ready+'<span class="rot"> Obróć telefon poziomo.</span>';
   $("readyWho").innerHTML=G.mode==="quick"?"Gotowi?":`Tura ${G.turn+1}/${G.total} · <b>${esc(cur().name)}</b>`;
   $("readyCat").textContent=G.cat.name;
   ["ready","arm","countdown"].forEach(id=>$(id).style.setProperty("--c",G.cat.c));
@@ -475,12 +485,18 @@ function startRound(){
   const now=performance.now();
   R={res:[],word:nextWord(),count:G.rtype==="count",end:now+G.time*1000,wordEnd:now+G.wordTime*1000,locked:false,released:false,minUntil:0,lastTick:-1,armed:false};
   $("play").style.setProperty("--c",G.cat.c);
-  const mixed=prefs.mixed&&motionSeen;
-  $("play").classList.toggle("mixed",mixed);
-  $("zPass").firstChild.textContent=mixed?"Dotknij = pas · przechyl = dobrze":"← Pas";
+  applyCtl();
+  T.zs=0;T.over=0;T.calm=0;
   setCatLine();
   setWord(R.word);$("liveScore").textContent="0";
   show("play");loop();
+}
+/* touch zones depend on the chosen control and on whether the motion sensor answers */
+function applyCtl(){
+  const ctl=motionSeen?prefs.control:"touch";
+  $("play").classList.toggle("mixed",ctl==="mixed");
+  $("play").classList.toggle("tiltonly",ctl==="tilt");
+  $("zPass").firstChild.textContent=ctl==="mixed"?"Dotknij = pas · przechyl = dobrze":"← Pas";
 }
 function setCatLine(){
   const who=G.mode==="quick"?G.cat.name:cur().name;
@@ -509,7 +525,7 @@ function loop(){
 function advance(){
   const p=$("play");p.classList.remove("ok","pass");
   if(R.count&&R.res.length>=G.perRound){endRound();return}
-  R.word=nextWord();setWord(R.word);R.locked=false;R.released=false;R.lastTick=-1;
+  R.word=nextWord();setWord(R.word);R.locked=false;R.released=false;R.lastTick=-1;T.over=0;T.cooldown=performance.now()+450;
   R.wordEnd=performance.now()+G.wordTime*1000;
   setCatLine();
 }
@@ -558,6 +574,8 @@ $("finAgain").addEventListener("click",()=>{G.parts.forEach(p=>p.score=0);G.turn
 
 /* ---------- sensors, fullscreen, wake lock ---------- */
 let sensorsOn=false,motionSeen=false;
+/* tilt tuning: TRIGGER ≈ 50° from upright, NEUTRAL ≈ 18°; times in ms */
+const T={TRIGGER:7.5,NEUTRAL:3,HOLD:120,SETTLE:300,zs:0,over:0,calm:0,cooldown:0,last:0};
 async function enableSensors(){
   if(sensorsOn)return;
   try{if(window.DeviceMotionEvent&&typeof DeviceMotionEvent.requestPermission==="function"){const r=await DeviceMotionEvent.requestPermission();if(r==="denied")return}}catch(e){return}
@@ -565,14 +583,23 @@ async function enableSensors(){
 }
 function onMotion(e){
   const g=e.accelerationIncludingGravity;if(!g||g.z==null)return;
-  motionSeen=true;
+  if(!motionSeen){motionSeen=true;if(R)applyCtl()}
   if(ARM){armMotion(g.z);return}
-  if(!R)return;
-  const z=prefs.invert&&!prefs.mixed?-g.z:g.z;
-  if(R.locked){if(Math.abs(z)<4){R.armed=true;release("tilt")}return}
-  if(!R.armed){if(Math.abs(z)<4)R.armed=true;return}
-  if(prefs.mixed){if(Math.abs(z)>6.5)act("ok","tilt");return}
-  if(z<-6.5)act("ok","tilt");else if(z>6.5)act("pass","tilt");
+  if(!R||prefs.control==="touch")return;
+  const now=performance.now();
+  const dt=T.last?Math.min(200,now-T.last):16;T.last=now;
+  T.zs+=(g.z-T.zs)*(1-Math.exp(-dt/70));          /* smooth out shakes, ~70 ms */
+  const z=prefs.invert&&prefs.control==="tilt"?-T.zs:T.zs,a=Math.abs(z);
+  /* back upright: must stay calm for a moment before it counts */
+  if(a<T.NEUTRAL){if(!T.calm)T.calm=now}else T.calm=0;
+  const settled=T.calm&&now-T.calm>=T.SETTLE;
+  if(R.locked){if(settled){R.armed=true;release("tilt")}return}
+  if(!R.armed){if(settled)R.armed=true;return}
+  if(now<T.cooldown)return;
+  /* a deliberate tilt: past the threshold and held briefly */
+  if(a>T.TRIGGER){if(!T.over)T.over=now;else if(now-T.over>=T.HOLD){T.over=0;
+    if(prefs.control==="mixed")act("ok","tilt");else act(z<0?"ok":"pass","tilt")}}
+  else T.over=0;
 }
 function goFull(){try{window.AndroidApp&&AndroidApp.landscape(true)}catch(e){}try{const d=document.documentElement;const p=d.requestFullscreen&&d.requestFullscreen({navigationUI:"hide"});if(p&&p.then)p.then(()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock("landscape").catch(()=>{})}catch(e){}}).catch(()=>{})}catch(e){}}
 function exitFull(){try{window.AndroidApp&&AndroidApp.landscape(false)}catch(e){}try{document.fullscreenElement&&document.exitFullscreen().catch(()=>{})}catch(e){}}
