@@ -105,7 +105,9 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 .legend span:first-child{background:var(--ok)} .legend span:last-child{background:var(--pass)}
 .legend span b,.legend span i{font-style:normal;font-weight:800}
 #ready .hint{color:var(--ink);font-weight:500}
-#countdown{background:var(--c,var(--pink))}
+#countdown,#arm{background:var(--c,var(--pink))}
+#arm .hint{color:var(--ink);font-weight:600;max-width:34ch}
+#arm .big{max-width:14ch}
 .count{font-family:var(--display);font-weight:var(--dw,800);font-size:min(46vw,46vh);line-height:.85;color:var(--paper);-webkit-text-stroke:5px var(--ink);text-shadow:10px 10px 0 var(--ink)}
 .count.pop{animation:pop .9s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(.4) rotate(-12deg)}40%{transform:scale(1.08) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
@@ -204,9 +206,15 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 </section>
 
 <!-- COUNTDOWN -->
+<section class="stage" id="arm" hidden>
+  <div class="forehead">NA CZOŁO</div>
+  <p class="big">Przyłóż telefon do czoła</p>
+  <p class="hint" id="armHint">Odliczanie ruszy, gdy telefon stanie pionowo. Możesz też dotknąć ekranu.</p>
+</section>
+
 <section class="stage" id="countdown" hidden>
   <div class="count" id="countNum">3</div>
-  <div class="who">Przyłóż do czoła</div>
+  <div class="who">Trzymaj przy czole</div>
 </section>
 
 <!-- PLAY -->
@@ -293,7 +301,7 @@ const allCats=()=>CATS.concat(custom.map(c=>Object.assign({g:"Twoje kategorie",c
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
-const SCREENS=["home","ready","countdown","play","summary","final"];
+const SCREENS=["home","ready","arm","countdown","play","summary","final"];
 function show(id){SCREENS.forEach(s=>$(s).hidden=s!==id)}
 
 /* ---------- audio & haptics ---------- */
@@ -419,11 +427,28 @@ function toReady(){
   $("readyHint").innerHTML=(mx?"Przechyl telefon w dowolną stronę, gdy zgadniesz, potem wróć do pionu. Dotknij ekranu, żeby spasować. Bez czujnika ruchu gra przełączy się na dotyk: prawa strona dobrze, lewa pas.":"Bez czujnika? Dotknij prawej strony ekranu przy zgadnięciu, lewej przy pasie.")+'<span class="rot"> Obróć telefon poziomo.</span>';
   $("readyWho").innerHTML=G.mode==="quick"?"Gotowi?":`Tura ${G.turn+1}/${G.total} · <b>${esc(cur().name)}</b>`;
   $("readyCat").textContent=G.cat.name;
-  $("ready").style.setProperty("--c",G.cat.c);$("countdown").style.setProperty("--c",G.cat.c);
+  ["ready","arm","countdown"].forEach(id=>$(id).style.setProperty("--c",G.cat.c));
   show("ready");
 }
 $("readyBack").addEventListener("click",()=>{show("home")});
-$("readyGo").addEventListener("click",async()=>{audio();await enableSensors();goFull();lockWake();startCountdown()});
+$("readyGo").addEventListener("click",async()=>{audio();await enableSensors();goFull();lockWake();startArm()});
+
+/* wait until the phone is held upright against the forehead, then count down */
+let ARM=null;
+function startArm(){
+  ARM={since:0,t:setTimeout(()=>{if(ARM&&!motionSeen)$("armHint").textContent="Nie widzę czujnika ruchu. Dotknij ekranu, żeby zacząć."},1500)};
+  $("armHint").textContent="Odliczanie ruszy, gdy telefon stanie pionowo. Możesz też dotknąć ekranu.";
+  show("arm");
+}
+function stopArm(){if(ARM){clearTimeout(ARM.t);ARM=null}}
+function armed(){if(!ARM)return;stopArm();startCountdown()}
+$("arm").addEventListener("click",armed);
+function armMotion(z){
+  if(!ARM)return;
+  const now=performance.now();
+  if(Math.abs(z)<3.5){if(!ARM.since)ARM.since=now;else if(now-ARM.since>700)armed()}
+  else ARM.since=0;
+}
 
 function splitW(w){const i=w.indexOf("|");return i<0?{t:w.trim(),a:""}:{t:w.slice(0,i).trim(),a:w.slice(i+1).trim()}}
 function setWord(raw){const s=splitW(raw);$("word").textContent=s.t;const a=$("artist");a.textContent=s.a;a.hidden=!s.a}
@@ -541,6 +566,7 @@ async function enableSensors(){
 function onMotion(e){
   const g=e.accelerationIncludingGravity;if(!g||g.z==null)return;
   motionSeen=true;
+  if(ARM){armMotion(g.z);return}
   if(!R)return;
   const z=prefs.invert&&!prefs.mixed?-g.z:g.z;
   if(R.locked){if(Math.abs(z)<4){R.armed=true;release("tilt")}return}
@@ -559,6 +585,7 @@ renderHome();show("home");
 window.appBack=function(){
   if($("sheetHost").firstChild){closeSheet();return true}
   if(R){cancelAnimationFrame(raf);R=null;$("play").classList.remove("ok","pass");exitFull();show("home");return true}
+  if(ARM){stopArm();exitFull();show("home");return true}
   if(cdTimer&&!$("countdown").hidden){clearInterval(cdTimer);exitFull();show("home");return true}
   if($("home").hidden){exitFull();show("home");return true}
   return false;

@@ -12,7 +12,7 @@
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/jetbrains-mono-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/jetbrains-mono-latin-ext-800-normal.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/jetbrains-mono-latin-800-normal.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-html,body{margin:0;-webkit-tap-highlight-color:transparent}img{max-width:100%}</style></head><body>
+html{box-sizing:border-box;height:100%;padding-top:max(env(safe-area-inset-top,0px),var(--ai-top,0px));padding-bottom:max(env(safe-area-inset-bottom,0px),var(--ai-bottom,0px));background:#ffe14d}html,body{margin:0;-webkit-tap-highlight-color:transparent}img{max-width:100%}</style></head><body>
 <title>Chylę czoła</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#ffe14d">
@@ -43,7 +43,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15p
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 :focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
-.screen{height:100%;display:flex;flex-direction:column;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px;overflow-y:auto}
+.screen{height:100%;display:flex;flex-direction:column;padding-left:max(16px,max(env(safe-area-inset-left,0px),var(--ai-left,0px)));padding-right:max(16px,max(env(safe-area-inset-right,0px),var(--ai-right,0px)));padding-block:18px;overflow-y:auto}
 .wrap{width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 
 /* pressable: everything clickable sinks into its shadow */
@@ -73,8 +73,8 @@ button{cursor:pointer;border:0;background:none}
 
 /* sheet */
 .sheet{position:fixed;inset:0;background:rgba(17,16,20,.55);display:flex;align-items:flex-end;justify-content:center;z-index:20}
-.sheet .box{width:100%;max-width:560px;max-height:92%;overflow-y:auto;background:var(--paper);border:var(--b);border-bottom:0;padding-block:0 calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px;box-shadow:0 -6px 0 var(--ink)}
-.sheet h3{font-family:var(--display);font-weight:var(--dw,800);font-size:28px;line-height:1;margin:0 calc(-1 * max(18px,env(safe-area-inset-left,0px))) 0;padding:20px max(18px,env(safe-area-inset-left,0px)) 16px;background:var(--c,var(--gold));border-bottom:var(--b);letter-spacing:-.02em}
+.sheet .box{width:100%;max-width:560px;max-height:92%;overflow-y:auto;background:var(--paper);border:var(--b);border-bottom:0;padding-block:0 calc(20px + max(env(safe-area-inset-bottom,0px),var(--ai-bottom,0px)));padding-left:max(18px,max(env(safe-area-inset-left,0px),var(--ai-left,0px)));padding-right:max(18px,max(env(safe-area-inset-right,0px),var(--ai-right,0px)));display:flex;flex-direction:column;gap:18px;box-shadow:0 -6px 0 var(--ink)}
+.sheet h3{font-family:var(--display);font-weight:var(--dw,800);font-size:28px;line-height:1;margin:0 calc(-1 * max(18px,max(env(safe-area-inset-left,0px),var(--ai-left,0px)))) 0;padding:20px max(18px,max(env(safe-area-inset-left,0px),var(--ai-left,0px))) 16px;background:var(--c,var(--gold));border-bottom:var(--b);letter-spacing:-.02em}
 .field{display:flex;flex-direction:column;gap:8px}
 .field>label,.field>.lbl{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:800}
 .seg{display:flex;gap:8px;flex-wrap:wrap}
@@ -103,7 +103,7 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 .tg[aria-checked="true"] .sw::after{transform:translateX(24px)}
 
 /* ready / countdown / play */
-.stage{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px;position:relative;user-select:none;-webkit-user-select:none}
+.stage{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;padding-left:max(16px,max(env(safe-area-inset-left,0px),var(--ai-left,0px)));padding-right:max(16px,max(env(safe-area-inset-right,0px),var(--ai-right,0px)));padding-block:16px;position:relative;user-select:none;-webkit-user-select:none}
 #ready{background:var(--c,var(--bg))}
 .who{font-family:var(--mono);font-size:clamp(13px,3.4vw,16px);font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:var(--paper);border:var(--b);padding:5px 12px;box-shadow:var(--sh-sm)}
 .who b{background:var(--ink);color:var(--gold);padding:0 6px}
@@ -115,13 +115,15 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 .legend span:first-child{background:var(--ok)} .legend span:last-child{background:var(--pass)}
 .legend span b,.legend span i{font-style:normal;font-weight:800}
 #ready .hint{color:var(--ink);font-weight:500}
-#countdown{background:var(--c,var(--pink))}
+#countdown,#arm{background:var(--c,var(--pink))}
+#arm .hint{color:var(--ink);font-weight:600;max-width:34ch}
+#arm .big{max-width:14ch}
 .count{font-family:var(--display);font-weight:var(--dw,800);font-size:min(46vw,46vh);line-height:.85;color:var(--paper);-webkit-text-stroke:5px var(--ink);text-shadow:10px 10px 0 var(--ink)}
 .count.pop{animation:pop .9s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(.4) rotate(-12deg)}40%{transform:scale(1.08) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
 /* play: a framed playing card on a dotted paper table */
 #play{background:var(--paper);background-image:radial-gradient(rgba(17,16,20,.35) 1.1px,transparent 1.3px);background-size:20px 20px;padding:0}
-#play .card{position:absolute;top:max(12px,env(safe-area-inset-top,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));left:max(12px,env(safe-area-inset-left,0px));right:max(18px,env(safe-area-inset-right,0px));
+#play .card{position:absolute;top:max(12px,max(env(safe-area-inset-top,0px),var(--ai-top,0px)));bottom:max(16px,max(env(safe-area-inset-bottom,0px),var(--ai-bottom,0px)));left:max(12px,max(env(safe-area-inset-left,0px),var(--ai-left,0px)));right:max(18px,max(env(safe-area-inset-right,0px),var(--ai-right,0px)));
   background:var(--c,var(--pink));border:4px solid var(--ink);border-radius:0;box-shadow:7px 7px 0 var(--ink);overflow:hidden;
   display:flex;flex-direction:column;align-items:stretch;padding:14px 16px 0;transition:background .12s}
 #play .card::before{content:"";position:absolute;inset:8px;border:2px solid var(--ink);opacity:.28;pointer-events:none}
@@ -140,9 +142,9 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 #play .chead .score{margin-left:auto}
 #play .chead>.sp{flex:1 1 0;display:flex;justify-content:flex-end}
 #play .zones{position:absolute;inset:0;display:flex;z-index:3}
-#play .zones button{flex:1;display:flex;align-items:flex-end;padding:0 0 max(64px,calc(env(safe-area-inset-bottom,0px) + 64px)) max(32px,calc(env(safe-area-inset-left,0px) + 32px));font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+#play .zones button{flex:1;display:flex;align-items:flex-end;padding:0 0 max(64px,calc(max(env(safe-area-inset-bottom,0px),var(--ai-bottom,0px)) + 64px)) max(32px,calc(max(env(safe-area-inset-left,0px),var(--ai-left,0px)) + 32px));font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 #play .zones button span{border:2px solid var(--ink);background:var(--paper);padding:3px 8px}
-#play .zones button:last-child{justify-content:flex-end;padding-left:0;padding-right:max(38px,calc(env(safe-area-inset-right,0px) + 38px))}
+#play .zones button:last-child{justify-content:flex-end;padding-left:0;padding-right:max(38px,calc(max(env(safe-area-inset-right,0px),var(--ai-right,0px)) + 38px))}
 #play .track{position:relative;z-index:1;flex:none;height:16px;margin:0 6px 16px;border:3px solid var(--ink);background:var(--paper)}
 #play .bar{height:100%;background:var(--ink)}
 #play.mixed #zOk{display:none}
@@ -214,9 +216,15 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 </section>
 
 <!-- COUNTDOWN -->
+<section class="stage" id="arm" hidden>
+  <div class="forehead">NA CZOŁO</div>
+  <p class="big">Przyłóż telefon do czoła</p>
+  <p class="hint" id="armHint">Odliczanie ruszy, gdy telefon stanie pionowo. Możesz też dotknąć ekranu.</p>
+</section>
+
 <section class="stage" id="countdown" hidden>
   <div class="count" id="countNum">3</div>
-  <div class="who">Przyłóż do czoła</div>
+  <div class="who">Trzymaj przy czole</div>
 </section>
 
 <!-- PLAY -->
@@ -303,7 +311,7 @@ const allCats=()=>CATS.concat(custom.map(c=>Object.assign({g:"Twoje kategorie",c
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
-const SCREENS=["home","ready","countdown","play","summary","final"];
+const SCREENS=["home","ready","arm","countdown","play","summary","final"];
 function show(id){SCREENS.forEach(s=>$(s).hidden=s!==id)}
 
 /* ---------- audio & haptics ---------- */
@@ -429,11 +437,28 @@ function toReady(){
   $("readyHint").innerHTML=(mx?"Przechyl telefon w dowolną stronę, gdy zgadniesz, potem wróć do pionu. Dotknij ekranu, żeby spasować. Bez czujnika ruchu gra przełączy się na dotyk: prawa strona dobrze, lewa pas.":"Bez czujnika? Dotknij prawej strony ekranu przy zgadnięciu, lewej przy pasie.")+'<span class="rot"> Obróć telefon poziomo.</span>';
   $("readyWho").innerHTML=G.mode==="quick"?"Gotowi?":`Tura ${G.turn+1}/${G.total} · <b>${esc(cur().name)}</b>`;
   $("readyCat").textContent=G.cat.name;
-  $("ready").style.setProperty("--c",G.cat.c);$("countdown").style.setProperty("--c",G.cat.c);
+  ["ready","arm","countdown"].forEach(id=>$(id).style.setProperty("--c",G.cat.c));
   show("ready");
 }
 $("readyBack").addEventListener("click",()=>{show("home")});
-$("readyGo").addEventListener("click",async()=>{audio();await enableSensors();goFull();lockWake();startCountdown()});
+$("readyGo").addEventListener("click",async()=>{audio();await enableSensors();goFull();lockWake();startArm()});
+
+/* wait until the phone is held upright against the forehead, then count down */
+let ARM=null;
+function startArm(){
+  ARM={since:0,t:setTimeout(()=>{if(ARM&&!motionSeen)$("armHint").textContent="Nie widzę czujnika ruchu. Dotknij ekranu, żeby zacząć."},1500)};
+  $("armHint").textContent="Odliczanie ruszy, gdy telefon stanie pionowo. Możesz też dotknąć ekranu.";
+  show("arm");
+}
+function stopArm(){if(ARM){clearTimeout(ARM.t);ARM=null}}
+function armed(){if(!ARM)return;stopArm();startCountdown()}
+$("arm").addEventListener("click",armed);
+function armMotion(z){
+  if(!ARM)return;
+  const now=performance.now();
+  if(Math.abs(z)<3.5){if(!ARM.since)ARM.since=now;else if(now-ARM.since>700)armed()}
+  else ARM.since=0;
+}
 
 function splitW(w){const i=w.indexOf("|");return i<0?{t:w.trim(),a:""}:{t:w.slice(0,i).trim(),a:w.slice(i+1).trim()}}
 function setWord(raw){const s=splitW(raw);$("word").textContent=s.t;const a=$("artist");a.textContent=s.a;a.hidden=!s.a}
@@ -551,6 +576,7 @@ async function enableSensors(){
 function onMotion(e){
   const g=e.accelerationIncludingGravity;if(!g||g.z==null)return;
   motionSeen=true;
+  if(ARM){armMotion(g.z);return}
   if(!R)return;
   const z=prefs.invert&&!prefs.mixed?-g.z:g.z;
   if(R.locked){if(Math.abs(z)<4){R.armed=true;release("tilt")}return}
@@ -569,6 +595,7 @@ renderHome();show("home");
 window.appBack=function(){
   if($("sheetHost").firstChild){closeSheet();return true}
   if(R){cancelAnimationFrame(raf);R=null;$("play").classList.remove("ok","pass");exitFull();show("home");return true}
+  if(ARM){stopArm();exitFull();show("home");return true}
   if(cdTimer&&!$("countdown").hidden){clearInterval(cdTimer);exitFull();show("home");return true}
   if($("home").hidden){exitFull();show("home");return true}
   return false;

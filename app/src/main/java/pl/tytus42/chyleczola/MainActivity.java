@@ -6,9 +6,11 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.view.WindowManager.LayoutParams;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
@@ -34,12 +36,23 @@ public class MainActivity extends Activity {
     private static final String HOST = "appassets.androidplatform.net";
     private static final String PREFIX = "/assets/";
     private WebView web;
+    private String insetsJs = "";
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // Draw edge to edge, including the camera cutout, so no black bar is left at the top.
+        if (Build.VERSION.SDK_INT >= 28) {
+            LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = Build.VERSION.SDK_INT >= 30
+                    ? LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                    : LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+        getWindow().setStatusBarColor(0x00000000);
+        getWindow().setNavigationBarColor(0x00000000);
 
         web = new WebView(this);
         web.setBackgroundColor(0xFFFFE14D);
@@ -57,6 +70,13 @@ public class MainActivity extends Activity {
         web.setWebChromeClient(new WebChromeClient());
         web.setWebViewClient(new AssetClient());
         web.addJavascriptInterface(new Bridge(), "AndroidApp");
+        web.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+                pushInsets(insets);
+                return insets;
+            }
+        });
 
         if (state != null) {
             web.restoreState(state);
@@ -100,6 +120,11 @@ public class MainActivity extends Activity {
         }
 
         @Override
+        public void onPageFinished(WebView view, String url) {
+            if (!insetsJs.isEmpty()) view.evaluateJavascript(insetsJs, null);
+        }
+
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             return !HOST.equals(request.getUrl().getHost());
         }
@@ -120,9 +145,28 @@ public class MainActivity extends Activity {
         }
     }
 
+    /** Hands the camera-cutout size to the page as CSS variables (--ai-top etc.), in CSS pixels. */
+    private void pushInsets(WindowInsets insets) {
+        int l = 0, t = 0, r = 0, b = 0;
+        if (Build.VERSION.SDK_INT >= 28) {
+            DisplayCutout c = insets.getDisplayCutout();
+            if (c != null) {
+                l = c.getSafeInsetLeft(); t = c.getSafeInsetTop();
+                r = c.getSafeInsetRight(); b = c.getSafeInsetBottom();
+            }
+        }
+        float d = getResources().getDisplayMetrics().density;
+        insetsJs = "(function(s){s.setProperty('--ai-left','" + Math.round(l / d) + "px');"
+                + "s.setProperty('--ai-top','" + Math.round(t / d) + "px');"
+                + "s.setProperty('--ai-right','" + Math.round(r / d) + "px');"
+                + "s.setProperty('--ai-bottom','" + Math.round(b / d) + "px');})(document.documentElement.style)";
+        web.evaluateJavascript(insetsJs, null);
+    }
+
     @SuppressWarnings("deprecation")
     private void hideSystemBars() {
         if (Build.VERSION.SDK_INT >= 30) {
+            getWindow().setDecorFitsSystemWindows(false);
             WindowInsetsController c = getWindow().getInsetsController();
             if (c != null) {
                 c.hide(WindowInsets.Type.systemBars());
@@ -133,7 +177,9 @@ public class MainActivity extends Activity {
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
     }
 

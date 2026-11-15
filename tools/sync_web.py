@@ -16,9 +16,12 @@ for fam, slug, weights in faces:
 body = re.sub(r'<link rel="preconnect"[^>]*>\n?', "", src)
 body = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^"]*">\n?', "", body)
 body = re.sub(r'<meta charset="utf-8">\n?|<meta name="viewport"[^>]*>\n?', "", body)
+# The app passes the camera-cutout size as --ai-* variables, because WebView does not always fill env(safe-area-inset-*).
+body = re.sub(r"env\(safe-area-inset-(left|right|top|bottom),\s*0px\)", r"max(env(safe-area-inset-\1,0px),var(--ai-\1,0px))", body)
 out = ("<!doctype html><html lang=\"pl\"><head><meta charset=\"utf-8\">"
        "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no\">"
-       "<style>" + "\n".join(css) + "\nhtml,body{margin:0;-webkit-tap-highlight-color:transparent}img{max-width:100%}</style>"
+       "<style>" + "\n".join(css) + "\nhtml{box-sizing:border-box;height:100%;padding-top:max(env(safe-area-inset-top,0px),var(--ai-top,0px));padding-bottom:max(env(safe-area-inset-bottom,0px),var(--ai-bottom,0px));background:#ffe14d}"
+       "html,body{margin:0;-webkit-tap-highlight-color:transparent}img{max-width:100%}</style>"
        "</head><body>\n" + body + "\n</body></html>\n")
 (root / "app/src/main/assets/index.html").write_text(out, encoding="utf-8")
 print("index.html:", len(out), "bytes")
