@@ -132,6 +132,20 @@ public class MainActivity extends Activity {
 
     /** Called from the page: lock to landscape while a round is on screen. */
     private class Bridge {
+        /** Results screens: portrait on phones, free rotation on tablets. */
+        @JavascriptInterface
+        public void portrait(final boolean on) {
+            final boolean tablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setRequestedOrientation(on && !tablet
+                            ? ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                            : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                }
+            });
+        }
+
         @JavascriptInterface
         public void landscape(final boolean on) {
             runOnUiThread(new Runnable() {
