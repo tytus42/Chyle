@@ -34,7 +34,7 @@ button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 :focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 .screen{height:100%;display:flex;flex-direction:column;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-top:max(18px,calc(env(safe-area-inset-top,0px) + 10px));padding-bottom:max(18px,calc(env(safe-area-inset-bottom,0px) + 10px));overflow-y:auto}
-.wrap{width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap{width:100%;display:flex;flex-direction:column;gap:22px}
 
 /* pressable: everything clickable sinks into its shadow */
 .press{transition:transform .08s,box-shadow .08s}
@@ -63,7 +63,7 @@ button{cursor:pointer;border:0;background:none}
 
 /* sheet */
 .sheet{position:fixed;inset:0;background:rgba(17,16,20,.55);display:flex;align-items:flex-end;justify-content:center;z-index:20}
-.sheet .box{width:100%;max-width:560px;max-height:92%;overflow-y:auto;background:var(--paper);border:var(--b);border-bottom:0;padding-block:0 calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px;box-shadow:0 -6px 0 var(--ink)}
+.sheet .box{width:100%;max-height:92%;overflow-y:auto;background:var(--paper);border:var(--b);border-bottom:0;padding-block:0 calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px;box-shadow:0 -6px 0 var(--ink)}
 .sheet h3{font-family:var(--display);font-weight:var(--dw,800);font-size:28px;line-height:1;margin:0 calc(-1 * max(18px,env(safe-area-inset-left,0px))) 0;padding:20px max(18px,env(safe-area-inset-left,0px)) 16px;background:var(--c,var(--gold));border-bottom:var(--b);letter-spacing:-.02em}
 .field{display:flex;flex-direction:column;gap:8px}
 .field>label,.field>.lbl{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:800}
@@ -113,7 +113,7 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 @keyframes pop{0%{transform:scale(.4) rotate(-12deg)}40%{transform:scale(1.08) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
 /* play: a framed playing card on a dotted paper table */
 #play{background:var(--paper);background-image:radial-gradient(rgba(17,16,20,.35) 1.1px,transparent 1.3px);background-size:20px 20px;padding:0}
-#play .card{position:absolute;top:12px;bottom:16px;left:12px;right:18px;
+#play .card{position:absolute;top:20px;bottom:26px;left:22px;right:29px;
   background:var(--c,var(--pink));border:4px solid var(--ink);border-radius:0;box-shadow:7px 7px 0 var(--ink);overflow:hidden;
   display:flex;flex-direction:column;align-items:stretch;padding:14px 16px 0;transition:background .12s}
 #play .card::before{content:"";position:absolute;inset:8px;border:2px solid var(--ink);opacity:.28;pointer-events:none}
@@ -132,9 +132,9 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 #play .chead .score{margin-left:auto}
 #play .chead>.sp{flex:1 1 0;display:flex;justify-content:flex-end}
 #play .zones{position:absolute;inset:0;display:flex;z-index:3}
-#play .zones button{flex:1;display:flex;align-items:flex-end;padding:0 0 max(64px,calc(env(safe-area-inset-bottom,0px) + 64px)) max(32px,calc(env(safe-area-inset-left,0px) + 32px));font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+#play .zones button{flex:1;display:flex;align-items:flex-end;padding:0 0 72px 48px;font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 #play .zones button span{border:2px solid var(--ink);background:var(--paper);padding:3px 8px}
-#play .zones button:last-child{justify-content:flex-end;padding-left:0;padding-right:max(38px,calc(env(safe-area-inset-right,0px) + 38px))}
+#play .zones button:last-child{justify-content:flex-end;padding-left:0;padding-right:55px}
 #play .track{position:relative;z-index:1;flex:none;height:16px;margin:0 6px 16px;border:3px solid var(--ink);background:var(--paper)}
 #play .bar{height:100%;background:var(--ink)}
 #play.mixed #zOk{display:none}
