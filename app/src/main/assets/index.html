@@ -60,6 +60,8 @@ button{cursor:pointer;border:0;background:none}
 .tag{margin:16px 0 0;font-size:15px;font-weight:500;max-width:34ch;background:var(--paper);border:var(--b);padding:8px 12px;box-shadow:var(--sh-sm)}
 body.sheet-open .screen{overflow:hidden}
 .sheet .box{overscroll-behavior:contain}
+.setbtn{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;background:var(--paper)}
+.setbtn svg{width:24px;height:24px;stroke-width:2.2}
 .sheet .box.fixed{height:92%}
 .stack{display:grid}
 .stack>*{grid-area:1/1}
@@ -202,10 +204,10 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
         <h1 class="logo"><span>Chylę</span><em>czoła</em></h1>
         <p class="tag">Hasło na czole, drużyna podpowiada. Zgadnij jak najwięcej, zanim skończy się czas.</p>
       </div>
-      <button class="iconbtn" id="openSettings" aria-label="Ustawienia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </header>
     <div id="groups" class="wrap" style="gap:22px"></div>
-        <p class="foot"><span>Działa offline. Twoje kategorie zostają na tym urządzeniu.</span></p>
+    <button class="btn setbtn" id="openSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Ustawienia</button>
+    <p class="foot"><span>Działa offline. Twoje kategorie zostają na tym urządzeniu.</span></p>
   </div>
 </section>
 
