@@ -49,7 +49,8 @@ button{cursor:pointer;border:0;background:none}
 /* pressable: everything clickable sinks into its shadow */
 .press{transition:transform .08s,box-shadow .08s}
 .cat,.btn,.iconbtn,.seg button,.x{transition:transform .08s,box-shadow .08s}
-.cat:active,.btn:active,.iconbtn:active,.seg button:active,.x:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)!important}
+.cat:active,.btn:active{transform:translate(5px,5px);box-shadow:0 0 0 var(--ink)!important}
+.iconbtn:active,.seg button:active,.x:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)!important}
 
 /* home */
 .brand{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-top:6px}
@@ -57,17 +58,17 @@ button{cursor:pointer;border:0;background:none}
 .logo span{display:inline-block;background:var(--ink);color:var(--bg);padding:4px 12px 8px;transform:rotate(-2.5deg);box-shadow:5px 5px 0 var(--pink)}
 .logo em{font-style:normal;display:inline-block;background:var(--pink);border:var(--b);padding:2px 12px 8px;margin-left:clamp(28px,8vw,56px);transform:rotate(1.5deg);box-shadow:var(--sh)}
 .tag{margin:16px 0 0;font-size:15px;font-weight:500;max-width:34ch;background:var(--paper);border:var(--b);padding:8px 12px;box-shadow:var(--sh-sm)}
-.setbtn{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;background:var(--paper)}
-.setbtn svg{width:24px;height:24px;stroke-width:2.2}
 body.sheet-open .screen{overflow:hidden}
 .sheet .box{overscroll-behavior:contain}
+.sheet .box.fixed{height:92%}
+.sheet .box.fixed>.row:last-child{margin-top:auto}
 #summary .wrap,#final .wrap{max-width:640px;margin-inline:auto}
 .iconbtn{width:52px;height:52px;border:var(--b);background:var(--paper);box-shadow:var(--sh-sm);display:grid;place-items:center;flex:none}
 .iconbtn svg{width:24px;height:24px;stroke-width:2.2}
 .group h2{font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:0 0 12px;display:inline-block;background:var(--ink);color:var(--paper);padding:4px 10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:14px}
 .cat{position:relative;text-align:left;padding:14px 14px 12px;background:var(--c);border:var(--b);box-shadow:var(--sh);display:flex;flex-direction:column;gap:6px;min-height:118px;color:var(--ink)}
-.cat:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+@media (hover:hover){.cat:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}}
 .cat b{font-family:var(--display);font-weight:var(--dw,800);font-size:20px;line-height:1.02;letter-spacing:-.01em}
 .cat small{font-size:13px;line-height:1.3;font-weight:500}
 .cat .n{margin-top:auto;align-self:flex-start;font-family:var(--mono);font-size:11px;font-weight:700;background:var(--paper);border:2px solid var(--ink);padding:1px 6px;font-variant-numeric:tabular-nums}
@@ -93,10 +94,11 @@ input[type=text],textarea{background:#fff;border:var(--b);padding:11px 12px;widt
 input[type=text]:focus,textarea:focus{outline:none;box-shadow:var(--sh-sm);background:#fffbe0}
 textarea{min-height:180px;resize:vertical;line-height:1.5}
 .x{width:46px;border:var(--b);background:var(--pass);font-size:20px;font-weight:800;box-shadow:var(--sh-sm)}
-.link{font-weight:800;align-self:flex-start;padding:4px 0;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:4px;text-decoration-color:var(--pink)}
+.link{font-weight:800;align-self:flex-start;min-height:44px;display:inline-flex;align-items:center;padding:0;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:4px;text-decoration-color:var(--pink)}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 .btn{flex:1;padding:15px 18px;font-family:var(--display);font-weight:var(--dw,800);font-size:18px;letter-spacing:-.01em;border:var(--b);background:var(--paper);box-shadow:var(--sh);color:var(--ink)}
 .btn.primary{background:var(--pink)}
+#ready .btn.primary{background:var(--ink);color:var(--gold)}
 .btn.danger{background:var(--pass)}
 .toggles{display:flex;flex-direction:column;border:var(--b);box-shadow:var(--sh)}
 .tg{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:var(--b);text-align:left;width:100%;font-weight:700;background:#fff}
@@ -157,7 +159,7 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 #play.mixed .zones button:first-child{justify-content:center;padding-left:0}
 #play.ok .card{background:var(--ok)}
 #play.pass .card{background:var(--pass)}
-#play.ok .word,#play.pass .word{animation:stamp .25s ease-out}
+#play.ok .word,#play.pass .word{animation:stamp .25s ease-out both}
 @keyframes stamp{0%{transform:scale(1.4) rotate(-6deg)}100%{transform:scale(1) rotate(-3deg)}}
 
 /* summary */
@@ -172,8 +174,9 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 .words li span:first-child{min-width:0;overflow-wrap:anywhere}
 .words li span:last-child{flex:none;font-family:var(--mono);font-size:11px;font-weight:800;text-transform:uppercase;border:2px solid var(--ink);padding:1px 6px}
 .words li.ok span:last-child{background:var(--ok)}
-.words li.pass{color:var(--muted);font-weight:500;text-decoration:line-through;text-decoration-thickness:2px}
-.words li.pass span:last-child{background:var(--pass);color:var(--ink);text-decoration:none}
+.words li.pass{color:var(--muted);font-weight:500}
+.words li.pass span:first-child{text-decoration:line-through;text-decoration-thickness:2px}
+.words li.pass span:last-child{background:var(--pass);color:var(--ink)}
 .words li.pass span:last-child:empty{display:none}
 .words .wa{display:block;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);text-decoration:none}
 .board{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
@@ -194,12 +197,12 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
     <header class="brand">
       <div>
         <h1 class="logo"><span>Chylę</span><em>czoła</em></h1>
-        <p class="tag">Hasło na czole, drużyna podpowiada. Przechyl w dół, gdy zgadniesz.</p>
+        <p class="tag">Hasło na czole, drużyna podpowiada. Zgadnij jak najwięcej, zanim skończy się czas.</p>
       </div>
+      <button class="iconbtn" id="openSettings" aria-label="Ustawienia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </header>
     <div id="groups" class="wrap" style="gap:22px"></div>
-    <button class="btn setbtn" id="openSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Ustawienia</button>
-    <p class="foot"><span>Działa offline. Twoje kategorie zostają na tym urządzeniu.</span></p>
+        <p class="foot"><span>Działa offline. Twoje kategorie zostają na tym urządzeniu.</span></p>
   </div>
 </section>
 
@@ -246,7 +249,7 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
   </div>
   <div class="zones">
     <button id="zPass" aria-label="Pas"><span>← Pas</span></button>
-    <button id="zOk" aria-label="Zgadnięte"><span>Dobrze →</span></button>
+    <button id="zOk" aria-label="Zgadnięte"><span>Zgadnięte →</span></button>
   </div>
 </section>
 
@@ -256,7 +259,7 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
     <div class="sum-head">
       <div>
         <div class="who" id="sumWho"></div>
-        <p class="title2">Koniec czasu</p>
+        <p class="title2" id="sumTitle">Koniec czasu</p>
       </div>
       <div class="pts" id="sumPts">0<small>pkt</small></div>
     </div>
@@ -323,6 +326,7 @@ const saveCustom=()=>store.set("custom",custom);
 const allCats=()=>CATS.concat(custom.map(c=>Object.assign({g:"Twoje kategorie",custom:true},c)));
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const plural=(n,one,few,many)=>n===1?one:(n%10>=2&&n%10<=4&&(n%100<12||n%100>14))?few:many;
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const SCREENS=["home","ready","arm","countdown","play","summary","final"];
 function show(id){
@@ -346,7 +350,7 @@ function renderHome(){
   let h="";
   Object.keys(groups).forEach(g=>{
     h+=`<div class="group"><h2>${esc(g)}</h2><div class="grid">`;
-    groups[g].forEach(c=>{h+=`<button class="cat" style="--c:${c.c}" data-cat="${esc(c.id)}"><b>${esc(c.name)}</b><small>${esc(c.d||"Twoje hasła")}</small><span class="n">${c.w.length} HASEŁ${c.custom?" · przytrzymaj, by edytować":""}</span></button>`});
+    groups[g].forEach(c=>{h+=`<button class="cat" style="--c:${c.c}" data-cat="${esc(c.id)}"><b>${esc(c.name)}</b><small>${esc(c.d||"Twoje hasła")}</small><span class="n">${c.w.length} ${plural(c.w.length,"HASŁO","HASŁA","HASEŁ")}${c.custom?" · przytrzymaj, by edytować":""}</span></button>`});
     if(g==="Twoje kategorie")h+=`<button class="cat add" id="addCat"><b>+ Nowa kategoria</b><small>Wpisz własne hasła</small></button>`;
     h+=`</div></div>`;
   });
@@ -354,20 +358,29 @@ function renderHome(){
   $("groups").querySelectorAll("[data-cat]").forEach(b=>{
     const cat=allCats().find(c=>c.id===b.dataset.cat);
     b.addEventListener("click",()=>openSetup(cat));
-    if(cat.custom){let t;b.addEventListener("pointerdown",()=>{t=setTimeout(()=>{t="done";openEditor(cat)},550)});b.addEventListener("pointerup",()=>clearTimeout(t));b.addEventListener("pointerleave",()=>clearTimeout(t));b.addEventListener("contextmenu",e=>{e.preventDefault();openEditor(cat)});
+    if(cat.custom){let t;b.addEventListener("pointerdown",()=>{t=setTimeout(()=>{t="done";openEditor(cat)},550)});b.addEventListener("pointerup",()=>clearTimeout(t));b.addEventListener("pointerleave",()=>clearTimeout(t));b.addEventListener("pointercancel",()=>clearTimeout(t));b.addEventListener("contextmenu",e=>{e.preventDefault();openEditor(cat)});
       b.addEventListener("click",e=>{if(t==="done"){e.stopImmediatePropagation();t=null}},true)}
   });
   $("addCat").addEventListener("click",()=>openEditor(null));
 }
 
 /* ---------- sheets ---------- */
-function sheet(html,color){
-  $("sheetHost").innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><div class="box" style="--c:${color||"var(--fg)"}">${html}</div></div>`;
+let sheetReturn=null;
+function sheet(html,color,cls){
+  sheetReturn=document.activeElement;
+  $("sheetHost").innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="box${cls?" "+cls:""}" style="--c:${color||"var(--gold)"}">${html}</div></div>`;
   const s=$("sheetHost").firstChild;s.addEventListener("click",e=>{if(e.target===s)closeSheet()});
+  const h=s.querySelector("h3");if(h){h.id="sheetTitle";h.tabIndex=-1;h.style.outline="none";h.focus({preventScroll:true})}
   document.body.classList.add("sheet-open");
   return s.firstChild;
 }
-function closeSheet(){$("sheetHost").innerHTML="";document.body.classList.remove("sheet-open")}
+function closeSheet(){$("sheetHost").innerHTML="";document.body.classList.remove("sheet-open");if(sheetReturn&&document.contains(sheetReturn))sheetReturn.focus({preventScroll:true});sheetReturn=null}
+document.addEventListener("keydown",e=>{
+  const s=$("sheetHost").firstChild;if(!s)return;
+  if(e.key==="Escape"){e.preventDefault();closeSheet();return}
+  if(e.key==="Tab"){const f=[...s.querySelectorAll("button,input,textarea")].filter(x=>!x.closest("[hidden]"));if(!f.length)return;const a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&(document.activeElement===a||!s.contains(document.activeElement))){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}
+});
 function seg(name,opts,val){return `<div class="seg" data-seg="${name}">${opts.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${String(v)===String(val)}">${l}</button>`).join("")}</div>`}
 function bindSeg(box,name,cb){box.querySelectorAll(`[data-seg="${name}"] button`).forEach(b=>b.addEventListener("click",()=>{box.querySelectorAll(`[data-seg="${name}"] button`).forEach(x=>x.setAttribute("aria-pressed",x===b));cb(b.dataset.v)}))}
 
@@ -379,7 +392,7 @@ function openSetup(cat){
     <div class="field" id="fWord"><span class="lbl">Czas na jedno hasło</span>${seg("wordTime",[[5,"5 s"],[10,"10 s"],[15,"15 s"],[20,"20 s"],[30,"30 s"]],prefs.wordTime)}</div>
     <div class="field"><span class="lbl">Tryb</span>${seg("mode",[["quick","Szybka gra"],["teams","Drużyny"],["players","Gracze"]],prefs.mode)}<p class="hint" id="modeHint"></p></div>
     <div id="partBox"></div>
-    <div class="row"><button class="btn" id="sCancel">Anuluj</button><button class="btn primary" id="sGo">Graj</button></div>`,cat.c);
+    <div class="row"><button class="btn" id="sCancel">Anuluj</button><button class="btn primary" id="sGo">Graj</button></div>`,cat.c,"fixed");
   const hints={quick:"Jedna runda, bez liczenia graczy. Telefon krąży dowolnie.",teams:"Drużyny grają na zmianę. Jedna osoba z drużyny trzyma telefon, reszta podpowiada.",players:"Każdy gra za siebie. Pozostali podpowiadają, ranking na koniec."};
   function renderParts(){
     $("modeHint").textContent=hints[prefs.mode];
@@ -515,7 +528,7 @@ function applyCtl(){
   const ctl=motionSeen?prefs.control:"touch";
   $("play").classList.toggle("mixed",ctl==="mixed");
   $("play").classList.toggle("tiltonly",ctl==="tilt");
-  $("zPass").firstChild.textContent=ctl==="mixed"?"Dotknij = pas · przechyl = dobrze":"← Pas";
+  $("zPass").firstChild.textContent=ctl==="mixed"?"Dotknij = pas · przechyl = zgadnięte":"← Pas";
 }
 function setCatLine(){
   const who=G.mode==="quick"?G.cat.name:cur().name;
@@ -554,7 +567,7 @@ function act(kind,src){
   R.locked=true;R.armed=false;R.src=src||"touch";R.released=R.src==="auto";R.minUntil=performance.now()+650;
   R.res.push({w:R.word,ok:kind==="ok"});
   const p=$("play");p.classList.add(kind);
-  $("word").textContent=kind==="ok"?"Dobrze!":(src==="auto"?"Czas minął":"Pas");$("artist").hidden=true;
+  $("word").textContent=kind==="ok"?"Zgadnięte!":(src==="auto"?"Czas minął":"Pas");$("artist").hidden=true;
   $("liveScore").textContent=R.res.filter(r=>r.ok).length;
   kind==="ok"?(sfx.ok(),buzz(80)):(sfx.pass(),buzz([40,60,40]));
 }
@@ -569,6 +582,7 @@ function endRound(){
   $("play").classList.remove("ok","pass");
   sfx.end();buzz([200,80,200]);
   const pts=res.filter(r=>r.ok).length;cur().score+=pts;
+  $("sumTitle").textContent=G.rtype==="count"?"Koniec rundy":"Koniec czasu";
   $("sumWho").innerHTML=G.mode==="quick"?esc(G.cat.name):`Tura ${G.turn+1}/${G.total} · <b>${esc(cur().name)}</b>`;
   $("sumPts").innerHTML=G.rtype==="count"?`${pts}<small>&nbsp;/&nbsp;${G.perRound}</small>`:`${pts}<small>pkt</small>`;
   $("sumList").innerHTML=res.length?res.map(r=>`<li class="${r.ok?"ok":"pass"}"><span>${wordHtml(r.w)}</span><span>${r.ok?"zgadnięte":"pas"}</span></li>`).join(""):`<li class="pass"><span>Żadnego hasła tym razem</span><span></span></li>`;
@@ -579,7 +593,7 @@ function endRound(){
   $("aMenu").addEventListener("click",()=>{if(G.mode==="quick"){show("home")}else showFinal()});
   if($("aAgain"))$("aAgain").addEventListener("click",()=>{G.turn=0;toReady()});
   if($("aNext"))$("aNext").addEventListener("click",()=>{if(last)showFinal();else{G.turn++;toReady()}});
-  exitFull();show("summary");
+  exitFull();unlockWake();show("summary");
 }
 function showFinal(){
   const ranked=G.parts.slice().sort((a,b)=>b.score-a.score);
@@ -623,6 +637,7 @@ function onMotion(e){
 function goFull(){try{window.AndroidApp&&AndroidApp.landscape(true)}catch(e){}try{const d=document.documentElement;const p=d.requestFullscreen&&d.requestFullscreen({navigationUI:"hide"});if(p&&p.then)p.then(()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock("landscape").catch(()=>{})}catch(e){}}).catch(()=>{})}catch(e){}}
 function exitFull(){try{window.AndroidApp&&AndroidApp.landscape(false)}catch(e){}try{document.fullscreenElement&&document.exitFullscreen().catch(()=>{})}catch(e){}}
 let wake=null;
+function unlockWake(){try{wake&&wake.release()}catch(e){}wake=null}
 async function lockWake(){try{if(navigator.wakeLock&&!wake){wake=await navigator.wakeLock.request("screen");wake.addEventListener("release",()=>wake=null)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&R)lockWake()});
 
@@ -630,7 +645,7 @@ renderHome();show("home");
 /* hooks used by the Android app wrapper */
 window.appBack=function(){
   if($("sheetHost").firstChild){closeSheet();return true}
-  if(R){cancelAnimationFrame(raf);R=null;$("play").classList.remove("ok","pass");exitFull();show("home");return true}
+  if(R){cancelAnimationFrame(raf);R=null;$("play").classList.remove("ok","pass");exitFull();unlockWake();show("home");return true}
   if(ARM){stopArm();exitFull();show("home");return true}
   if(cdTimer&&!$("countdown").hidden){clearInterval(cdTimer);exitFull();show("home");return true}
   if($("home").hidden){exitFull();show("home");return true}
@@ -638,5 +653,6 @@ window.appBack=function(){
 };
 })();
 </script>
+
 
 </body></html>

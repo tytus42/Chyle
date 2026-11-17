@@ -16,6 +16,9 @@ for fam, slug, weights in faces:
 body = re.sub(r'<link rel="preconnect"[^>]*>\n?', "", src)
 body = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^"]*">\n?', "", body)
 body = re.sub(r'<meta charset="utf-8">\n?|<meta name="viewport"[^>]*>\n?', "", body)
+# The web page embeds its fonts as data URIs; the app ships them in assets/fonts instead.
+body = re.sub(r"/\* fonts embedded[^*]*\*/\n?", "", body)
+body = re.sub(r"@font-face\{[^}]*data:font/woff2;base64,[^}]*\}\n?", "", body)
 # The app passes the camera-cutout size as --ai-* variables, because WebView does not always fill env(safe-area-inset-*).
 body = re.sub(r"env\(safe-area-inset-(left|right|top|bottom),\s*0px\)", r"max(env(safe-area-inset-\1,0px),var(--ai-\1,0px))", body)
 out = ("<!doctype html><html lang=\"pl\"><head><meta charset=\"utf-8\">"

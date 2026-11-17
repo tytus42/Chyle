@@ -2,7 +2,8 @@ plugins {
     id 'com.android.application'
 }
 
-def runNumber = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInteger()
+// 100 + run number keeps GitHub builds ahead of the 1.0.2x builds made by hand
+def runNumber = 100 + (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInteger()
 
 android {
     namespace 'pl.tytus42.chyleczola'
